@@ -8,8 +8,20 @@ const FILE_PATH = path.join(__dirname, 'filenames.txt');
 let clickCounter = 0; // Internal counter for button clicks
 
 const server = http.createServer((req, res) => {
+    // Add CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); // Allow specific HTTP methods
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type'); // Allow specific headers
+
+    if (req.method === 'OPTIONS') {
+        // Handle preflight requests
+        res.writeHead(204); // No Content
+        res.end();
+        return;
+    }
+
     if (req.method === 'POST' && req.url === '/click') {
-	console.log(`Received ${req.method} request at ${req.url}`);
+        console.log(`Received ${req.method} request at ${req.url}`);
         // Increment click counter
         clickCounter++;
         res.writeHead(200, { 'Content-Type': 'application/json' });
